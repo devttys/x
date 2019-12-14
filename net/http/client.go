@@ -1,6 +1,7 @@
 package http
 
 import (
+	"net"
 	"net/http"
 	"time"
 )
