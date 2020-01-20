@@ -16,8 +16,12 @@ func DefaultTransport() *http.Transport {
 }
 
 func DefaultClient() *http.Client {
+	return Client(DefaultTransport())
+}
+
+func Client(transport *http.Transport) *http.Client {
 	return &http.Client{
 		Timeout:   time.Second * 10,
-		Transport: DefaultTransport(),
+		Transport: transport,
 	}
 }
