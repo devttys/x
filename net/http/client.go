@@ -1,22 +1,20 @@
 package http
 
 import (
-	"net"
 	"net/http"
+	"net/url"
 	"time"
 )
 
-func DefaultTransport() *http.Transport {
-	return &http.Transport{
-		Dial: (&net.Dialer{
-			Timeout: 5 * time.Second,
-		}).Dial,
-		TLSHandshakeTimeout: 5 * time.Second,
-	}
+func DefaultClient() *http.Client {
+	return Client(http.DefaultTransport.(*http.Transport))
 }
 
-func DefaultClient() *http.Client {
-	return Client(DefaultTransport())
+func WithProxy(proxyFunc func(*http.Request) (*url.URL, error)) *http.Client {
+	tr := http.DefaultTransport.(*http.Transport).Clone()
+
+	tr.Proxy = proxyFunc
+	return Client(tr)
 }
 
 func Client(transport *http.Transport) *http.Client {
