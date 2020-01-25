@@ -6,12 +6,20 @@ import (
 	"time"
 )
 
+var (
+	defaultClient = Client(Transport())
+)
+
 func DefaultClient() *http.Client {
-	return Client(http.DefaultTransport.(*http.Transport))
+	return defaultClient
+}
+
+func Transport() *http.Transport {
+	return http.DefaultTransport.(*http.Transport).Clone()
 }
 
 func WithProxy(proxyFunc func(*http.Request) (*url.URL, error)) *http.Client {
-	tr := http.DefaultTransport.(*http.Transport).Clone()
+	tr := Transport()
 
 	tr.Proxy = proxyFunc
 	return Client(tr)
